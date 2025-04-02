@@ -1,0 +1,9 @@
+out/
+.cache/
+.vscode/
+.idea/
+.vs/
+.fleet/
+
+CMakeUserPresets.json
+compile_commands.json
