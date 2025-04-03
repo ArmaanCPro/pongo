@@ -37,7 +37,7 @@
             "displayName": "AddressSanitizer",
             "inherits": "debug",
             "cacheVariables": {
-                "CMAKE_CXX_FLAGS": "-fsanitize=address"
+                "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer"
             }
         }
     ]

@@ -13,6 +13,12 @@ add_executable(main
         main.cpp
         shader.h
         shader.cpp
+        window.h
+        window.cpp
+        renderer.h
+        renderer.cpp
+        game.h
+        game.cpp
 )
 
 find_package(glfw3 CONFIG REQUIRED)

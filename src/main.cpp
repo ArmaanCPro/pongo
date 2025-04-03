@@ -7,38 +7,15 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "window.h"
+
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 
 int main()
 {
-    // initialization
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef PL_MACOS
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    // glfw window creation
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "pongo", nullptr, nullptr);
-    if (window == nullptr)
-    {
-        std::cerr << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window,
-                                   [](GLFWwindow*, int, int) { glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT); });
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-    glViewport(0, 0, 800, 600);
+    pongo::window& window = pongo::window::get_instance();
+    window.initialize(SCREEN_WIDTH, SCREEN_HEIGHT, "Pongo");
 
     GLuint VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -61,13 +38,13 @@ int main()
 
     shader.use();
 
-    auto input_handler = [](GLFWwindow* window)
+    auto input_handler = [](pongo::window& window)
     {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GL_TRUE);
+        if (window.get_key_state(GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            window.set_should_close(true);
     };
 
-    while (!glfwWindowShouldClose(window))
+    while (!window.should_close())
     {
         // input
         input_handler(window);
@@ -81,10 +58,9 @@ int main()
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        // glfw: swap buffers and poll IO events
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        window.swap_and_poll();
     }
 
+    window.shutdown();
     return 0;
 }
