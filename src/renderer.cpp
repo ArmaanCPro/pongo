@@ -27,6 +27,9 @@ namespace pongo
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        // world to ndc projection matrix
+        projection_matrix_ = glm::ortho(0.0f, WORLD_WIDTH, 0.0f, WORLD_HEIGHT, -1.0f, 1.0f);
     }
 
     void renderer::add_paddle()
@@ -66,9 +69,8 @@ namespace pongo
         model = glm::scale(model, glm::vec3(p.getWidth(), p.getHeight(), 1.0f));
         s.SetMat4("model", model);
 
-        // Create orthographic projection matrix (world to NDC)
-        glm::mat4 projection = glm::ortho(0.0f, WORLD_WIDTH, 0.0f, WORLD_HEIGHT, -1.0f, 1.0f);
-        s.SetMat4("projection", projection);
+        // use cached projection matrix
+        s.SetMat4("projection", projection_matrix_);
 
         s.SetMat4("view", glm::mat4(1.0f));
 

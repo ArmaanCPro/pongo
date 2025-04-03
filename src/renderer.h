@@ -25,5 +25,6 @@ namespace pongo
     private:
         GLuint VAO_ = 0, VBO_ = 0;
         std::vector<float> vertices_ = { 0.0f };
+        glm::mat4 projection_matrix_;
     };
 }
