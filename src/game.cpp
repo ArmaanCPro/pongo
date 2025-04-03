@@ -93,6 +93,14 @@ namespace pongo
     {
         ball_active = false;
 
+#ifdef PL_WINDOWS
+        system("cls");
+#elif
+        system("clear");
+#endif
+        std::cout << "P1 Score: " << player_score << std::endl;
+        std::cout << "P2 Score: " << enemy_score << std::endl;
+
         // reset ball to center with a random vertical velocity
         float random_vy = 20.0f + (rand() % 40) - 20.0f;
 
