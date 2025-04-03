@@ -10,13 +10,22 @@ namespace pongo
         gfx(r),
         main_shader(s),
         win(w),
-        player_paddle(10.0f, 50.0f, 2.5f, 15.0f, 40.0f),
-        enemy_paddle(90.0f, 50.0f, 2.5f, 15.0f, 35.0f),
+        player_paddle(10.0f, 50.0f, 1.5f, 15.0f, 40.0f),
+        enemy_paddle(90.0f, 50.0f, 1.5f, 15.0f, 35.0f),
         game_ball(50.0f, 50.0f, 40.0f, 30.0f, 2.0f),
         last_frame_time((float)glfwGetTime())
     {
         gfx.add_paddle();
         gfx.add_ball();
+
+        std::cout << "Play against ai? y/n" << std::endl;
+        std::string input;
+        std::cin >> input;
+        ai_active = (input == "y");
+        std::cout << '\n';
+        std::cout << "P1 Controls w/ arrow keys\n";
+        if (!ai_active)
+            std::cout << "P2 Controls w/ arrow keys" << std::endl;
     }
 
     void game::update_model()
@@ -34,13 +43,12 @@ namespace pongo
         if (win.get_key_state(GLFW_KEY_S) == GLFW_PRESS)
             player_paddle.move_down(delta_time);
 
-        // Player 2 controls or simple AI
-        // Option 1: Player 2 controls with arrow keys
-        /*if (win.get_key_state(GLFW_KEY_UP) == GLFW_PRESS)
+        if (ai_active)
+            update_enemy_ai(delta_time);
+        else if (win.get_key_state(GLFW_KEY_UP) == GLFW_PRESS)
             enemy_paddle.move_up(delta_time);
-        if (win.get_key_state(GLFW_KEY_DOWN) == GLFW_PRESS)
-            enemy_paddle.move_down(delta_time);*/
-        update_enemy_ai(delta_time);
+        else if (win.get_key_state(GLFW_KEY_DOWN) == GLFW_PRESS)
+            enemy_paddle.move_down(delta_time);
 
         // Update ball position
         if (ball_active)

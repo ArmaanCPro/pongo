@@ -30,6 +30,7 @@ namespace pongo
         // game state
         int player_score = 0;
         int enemy_score = 0;
+        bool ai_active = true;
         bool ball_active = true;
 
         void handle_collisions();
