@@ -16,6 +16,6 @@ namespace pongo
 
         void draw(shader s);
     private:
-        GLuint VAO_, VBO_;
+        GLuint VAO_ = 0, VBO_ = 0;
     };
 }
