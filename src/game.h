@@ -18,5 +18,9 @@ namespace pongo
         renderer& gfx;
         shader& main_shader;
         window& win;
+
+        paddle player_paddle;
+
+        float last_frame_time;
     };
 } // namespace pongo

@@ -7,13 +7,12 @@
 #include "shader.h"
 #include "game.h"
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#include "settings.h"
 
 int main()
 {
     pongo::window& window = pongo::window::get_instance();
-    window.initialize(SCREEN_WIDTH, SCREEN_HEIGHT, "Pongo");
+    window.initialize(pongo::SCREEN_WIDTH, pongo::SCREEN_HEIGHT, "Pongo");
 
     pongo::renderer renderer;
 

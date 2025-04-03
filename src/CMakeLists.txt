@@ -19,6 +19,9 @@ add_executable(main
         renderer.cpp
         game.h
         game.cpp
+        paddle.h
+        paddle.cpp
+        settings.h
 )
 
 find_package(glfw3 CONFIG REQUIRED)

@@ -7,19 +7,32 @@ namespace pongo
         :
         gfx(r),
         main_shader(s),
-        win(w)
+        win(w),
+        player_paddle(20.0f, 50.0f, 5.0f, 15.0f, 5.0f),
+        last_frame_time((float)glfwGetTime())
     {
-
+        gfx.add_paddle();
     }
 
     void game::update_model()
     {
+        // calculate delta time
+        float current_time = (float)glfwGetTime();
+        float delta_time = current_time - last_frame_time;
+        last_frame_time = current_time;
+
         if (win.get_key_state(GLFW_KEY_ESCAPE) == GLFW_PRESS)
             win.set_should_close(true);
+
+        if (win.get_key_state(GLFW_KEY_W) == GLFW_PRESS)
+            player_paddle.move_up(delta_time);
+        if (win.get_key_state(GLFW_KEY_S) == GLFW_PRESS)
+            player_paddle.move_down(delta_time);
     }
 
     void game::draw_frame()
     {
-        gfx.draw(main_shader);
+        gfx.render_paddle(player_paddle, main_shader);
+        //gfx.draw_all_verts(main_shader);
     }
 }
