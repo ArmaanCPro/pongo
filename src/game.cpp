@@ -40,9 +40,7 @@ namespace pongo
 
     void game::draw_frame()
     {
-        // Clear the screen. We can't do this in the renderer because it would clear the screen each time a different paddle is rendered
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        gfx.begin_scene(main_shader);
 
         gfx.render_paddle(player_paddle, main_shader);
         gfx.render_paddle(enemy_paddle, main_shader);

@@ -59,20 +59,26 @@ namespace pongo
 
     }
 
-    void renderer::render_paddle(const paddle& p, shader& s)
+    void renderer::begin_scene(shader& s)
     {
         s.use();
 
+        s.SetMat4("projection", projection_matrix_);
+
+        s.SetMat4("view", glm::mat4(1.0f));
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+    }
+
+    void renderer::render_paddle(const paddle& p, shader& s)
+    {
         // Create model matrix for the paddle
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(p.getX(), p.getY(), 0.0f));
         model = glm::scale(model, glm::vec3(p.getWidth(), p.getHeight(), 1.0f));
         s.SetMat4("model", model);
-
-        // use cached projection matrix
-        s.SetMat4("projection", projection_matrix_);
-
-        s.SetMat4("view", glm::mat4(1.0f));
 
         // Draw standard paddle geometry (centered at origin)
         glBindVertexArray(VAO_);

@@ -19,6 +19,7 @@ namespace pongo
 
         void add_paddle();
 
+        void begin_scene(shader& s);
         void render_paddle(const paddle& p, shader& s);
 
         void draw_all_verts(shader s);
