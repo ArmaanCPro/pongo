@@ -1,15 +1,16 @@
 {
-    "name": "pongo",
-    "version": "0.0.0",
-    "dependencies": [
-        "glfw3",
-        {
-            "name": "glad",
-            "features": [
-                "gl-api-latest"
-            ]
-        },
-        "glm"
-    ],
-    "builtin-baseline": "300239058e33420acd153135b3f6e6b187828992"
+  "name": "pongo",
+  "version": "0.0.0",
+  "dependencies": [
+    "glfw3",
+    {
+      "name": "glad",
+      "features": [
+        "gl-api-latest"
+      ]
+    },
+    "glm",
+    "cmakerc"
+  ],
+  "builtin-baseline": "300239058e33420acd153135b3f6e6b187828992"
 }

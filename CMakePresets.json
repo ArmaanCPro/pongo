@@ -13,7 +13,7 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
-                "VCPKG_OVERLAY_TRIPLETS": "${sourceDir}/vcpkg-overlays"
+                "VCPKG_OVERLAY_PORTS": "${sourceDir}/vcpkg-overlays"
             }
         },
         {
@@ -37,7 +37,7 @@
             "displayName": "AddressSanitizer",
             "inherits": "debug",
             "cacheVariables": {
-                "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-omit-frame-pointer -g"
+                "CMAKE_CXX_FLAGS": "-fsanitize=address"
             }
         }
     ]
