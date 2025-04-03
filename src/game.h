@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ball.h"
 #include "renderer.h"
 #include "shader.h"
 #include "window.h"
@@ -21,7 +22,19 @@ namespace pongo
 
         paddle player_paddle;
         paddle enemy_paddle;
+        ball game_ball;
 
         float last_frame_time;
+
+
+        // game state
+        int player_score = 0;
+        int enemy_score = 0;
+        bool ball_active = true;
+
+        void handle_collisions();
+        void reset_ball();
+
+        void update_enemy_ai(float delta_time);
     };
 } // namespace pongo

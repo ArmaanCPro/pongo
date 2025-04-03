@@ -19,16 +19,25 @@ namespace pongo
 {
     renderer::renderer()
     {
-        glGenVertexArrays(1, &VAO_);
-        glGenBuffers(1, &VBO_);
+        glGenVertexArrays(1, &paddle_VAO_);
+        glGenBuffers(1, &paddle_VBO_);
 
-        glBindVertexArray(VAO_);
+        glBindVertexArray(paddle_VAO_);
 
-        glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, paddle_VBO_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * paddle_vertices_.size(), paddle_vertices_.data(), GL_STATIC_DRAW);
         // position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+
+        glGenVertexArrays(1, &ball_VAO_);
+        glGenBuffers(1, &ball_VBO_);
+
+        glBindVertexArray(ball_VAO_);
+
+        glBindBuffer(GL_ARRAY_BUFFER, ball_VBO_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ball_vertices_.size(), ball_vertices_.data(), GL_STATIC_DRAW);
 
         // world to ndc projection matrix
         projection_matrix_ = glm::ortho(0.0f, WORLD_WIDTH, 0.0f, WORLD_HEIGHT, -1.0f, 1.0f);
@@ -49,16 +58,51 @@ namespace pongo
         };
 
         // Add to vertices vector
-        vertices_.clear();  // Clear any existing vertices
+        paddle_vertices_.clear();  // Clear any existing vertices
         for (float vertex : paddleVerts)
         {
-            vertices_.push_back(vertex);
+            paddle_vertices_.push_back(vertex);
         }
 
-        glBindVertexArray(VAO_);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO_);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_DYNAMIC_DRAW);
+        glBindVertexArray(paddle_VAO_);
+        glBindBuffer(GL_ARRAY_BUFFER, paddle_VBO_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * paddle_vertices_.size(), paddle_vertices_.data(), GL_DYNAMIC_DRAW);
 
+    }
+
+    void renderer::add_ball()
+    {
+        // Generate a circle approximation using triangles
+        ball_vertices_.clear();
+
+        // Center vertex
+        ball_vertices_.push_back(0.0f); // x
+        ball_vertices_.push_back(0.0f); // y
+        ball_vertices_.push_back(0.0f); // z
+
+        // Add vertices for each segment
+        for (int i = 0; i <= ball_segments_; i++)
+        {
+            float angle = 2.0f * glm::pi<float>() * i / ball_segments_;
+            float x = std::cos(angle);
+            float y = std::sin(angle);
+
+            ball_vertices_.push_back(x); // x
+            ball_vertices_.push_back(y); // y
+            ball_vertices_.push_back(0.0f); // z
+        }
+
+        // Create and bind VAO/VBO for the ball
+        glGenVertexArrays(1, &ball_VAO_);
+        glGenBuffers(1, &ball_VBO_);
+
+        glBindVertexArray(ball_VAO_);
+        glBindBuffer(GL_ARRAY_BUFFER, ball_VBO_);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(float) * ball_vertices_.size(), ball_vertices_.data(), GL_STATIC_DRAW);
+
+        // Position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
     }
 
     void renderer::begin_scene(shader& s)
@@ -85,18 +129,23 @@ namespace pongo
         s.SetVec4("u_Color", color);
 
         // Draw standard paddle geometry (centered at origin)
-        glBindVertexArray(VAO_);
+        glBindVertexArray(paddle_VAO_);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    void renderer::draw_all_verts(shader s)
+    void renderer::render_ball(const ball& b, shader& s, const glm::vec4& color)
     {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        // Create model matrix for the ball
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(b.getX(), b.getY(), 0.0f));
+        model = glm::scale(model, glm::vec3(b.getRadius(), b.getRadius(), 1.0f));
+        s.SetMat4("model", model);
 
-        s.use();
+        // set custom color uniform for frag shader
+        s.SetVec4("u_Color", color);
 
-        glBindVertexArray(VAO_);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // Draw standard ball geometry (centered at origin)
+        glBindVertexArray(ball_VAO_);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, ball_segments_ + 2);
     }
 } // namespace pongo

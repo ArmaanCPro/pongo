@@ -22,6 +22,8 @@ add_executable(main
         paddle.h
         paddle.cpp
         settings.h
+        ball.cpp
+        ball.h
 )
 
 find_package(glfw3 CONFIG REQUIRED)
