@@ -20,7 +20,7 @@ namespace pongo
         void add_paddle();
 
         void begin_scene(shader& s);
-        void render_paddle(const paddle& p, shader& s);
+        void render_paddle(const paddle& p, shader& s, const glm::vec4& color = glm::vec4(1.0f));
 
         void draw_all_verts(shader s);
     private:

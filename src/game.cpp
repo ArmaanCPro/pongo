@@ -43,7 +43,7 @@ namespace pongo
         gfx.begin_scene(main_shader);
 
         gfx.render_paddle(player_paddle, main_shader);
-        gfx.render_paddle(enemy_paddle, main_shader);
+        gfx.render_paddle(enemy_paddle, main_shader, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
         //gfx.draw_all_verts(main_shader);
     }
 }

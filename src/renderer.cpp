@@ -2,6 +2,8 @@
 
 #include "settings.h"
 
+#include <glm/common.hpp>
+#include <glm/common.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -69,16 +71,18 @@ namespace pongo
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
     }
 
-    void renderer::render_paddle(const paddle& p, shader& s)
+    void renderer::render_paddle(const paddle& p, shader& s, const glm::vec4& color)
     {
         // Create model matrix for the paddle
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(p.getX(), p.getY(), 0.0f));
         model = glm::scale(model, glm::vec3(p.getWidth(), p.getHeight(), 1.0f));
         s.SetMat4("model", model);
+
+        // set custom color uniform for frag shader
+        s.SetVec4("u_Color", color);
 
         // Draw standard paddle geometry (centered at origin)
         glBindVertexArray(VAO_);
