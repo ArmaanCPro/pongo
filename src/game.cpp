@@ -6,14 +6,9 @@ namespace pongo
 {
 
     game::game(renderer& r, shader& s, window& w)
-        :
-        gfx(r),
-        main_shader(s),
-        win(w),
-        player_paddle(10.0f, 50.0f, 1.5f, 15.0f, 40.0f),
-        enemy_paddle(90.0f, 50.0f, 1.5f, 15.0f, 35.0f),
-        game_ball(50.0f, 50.0f, 40.0f, 30.0f, 2.0f),
-        last_frame_time((float)glfwGetTime())
+        : gfx(r), main_shader(s), win(w), player_paddle(10.0f, 50.0f, 1.5f, 15.0f, 40.0f),
+          enemy_paddle(90.0f, 50.0f, 1.5f, 15.0f, 35.0f), game_ball(50.0f, 50.0f, 40.0f, 30.0f, 2.0f),
+          last_frame_time((float)glfwGetTime())
     {
         gfx.add_paddle();
         gfx.add_ball();
@@ -103,7 +98,7 @@ namespace pongo
 
 #ifdef PL_WINDOWS
         system("cls");
-#elif
+#else
         system("clear");
 #endif
         std::cout << "P1 Score: " << player_score << std::endl;
@@ -140,4 +135,4 @@ namespace pongo
         // Add randomness to make it beatable
         // Adjust speed based on score difference
     }
-}
+} // namespace pongo
