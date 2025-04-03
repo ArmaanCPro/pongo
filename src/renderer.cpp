@@ -45,7 +45,8 @@ namespace pongo
 
         // Add to vertices vector
         vertices_.clear();  // Clear any existing vertices
-        for (float vertex : paddleVerts) {
+        for (float vertex : paddleVerts)
+        {
             vertices_.push_back(vertex);
         }
 
@@ -57,10 +58,6 @@ namespace pongo
 
     void renderer::render_paddle(const paddle& p, shader& s)
     {
-        // Clear the screen
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
         s.use();
 
         // Create model matrix for the paddle

@@ -20,6 +20,7 @@ namespace pongo
         window& win;
 
         paddle player_paddle;
+        paddle enemy_paddle;
 
         float last_frame_time;
     };
