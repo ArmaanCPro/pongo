@@ -2,6 +2,9 @@
 
 #include "settings.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace utility
 {
     glm::vec2 world_to_ndc(float wx, float wy)
@@ -28,46 +31,52 @@ namespace pongo
 
     void renderer::add_paddle()
     {
-        // 6 verts * 3 components
-        for (int i = 0; i < 18; i++)
-            vertices_.emplace_back(0.0f);
+        // A simple rectangle centered at origin
+        float paddleVerts[] = {
+            // Position (x, y, z)
+            -0.5f,  0.5f, 0.0f,  // top left
+            -0.5f, -0.5f, 0.0f,  // bottom left
+             0.5f, -0.5f, 0.0f,  // bottom right
+
+            -0.5f,  0.5f, 0.0f,  // top left
+             0.5f, -0.5f, 0.0f,  // bottom right
+             0.5f,  0.5f, 0.0f   // top right
+        };
+
+        // Add to vertices vector
+        vertices_.clear();  // Clear any existing vertices
+        for (float vertex : paddleVerts) {
+            vertices_.push_back(vertex);
+        }
 
         glBindVertexArray(VAO_);
-
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_);
         glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_.size(), vertices_.data(), GL_DYNAMIC_DRAW);
+
     }
 
     void renderer::render_paddle(const paddle& p, shader& s)
     {
+        // Clear the screen
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         s.use();
 
-        float half_width = p.getWidth() / 2.0f;
-        float half_height = p.getHeight() / 2.0f;
+        // Create model matrix for the paddle
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(p.getX(), p.getY(), 0.0f));
+        model = glm::scale(model, glm::vec3(p.getWidth(), p.getHeight(), 1.0f));
+        s.SetMat4("model", model);
 
-        glm::vec2 center_ndc = utility::world_to_ndc(p.getX(), p.getY());
+        // Create orthographic projection matrix (world to NDC)
+        glm::mat4 projection = glm::ortho(0.0f, WORLD_WIDTH, 0.0f, WORLD_HEIGHT, -1.0f, 1.0f);
+        s.SetMat4("projection", projection);
 
-        // calculate corners
-        float left = center_ndc.x - (half_width / WORLD_WIDTH * 2.0f);
-        float right = center_ndc.x + (half_width / WORLD_WIDTH * 2.0f);
-        float top = center_ndc.y + (half_height / WORLD_HEIGHT * 2.0f);
-        float bottom = center_ndc.y - (half_height / WORLD_HEIGHT * 2.0f);
+        s.SetMat4("view", glm::mat4(1.0f));
 
-        // Update paddle vertices
-        float vertices[] = {
-            // position
-            left,  top,    0.0f,  // top left
-            left,  bottom, 0.0f,  // bottom left
-            right, bottom, 0.0f,  // bottom right
-
-            left,  top,    0.0f,  // top left
-            right, bottom, 0.0f,  // bottom right
-            right, top,    0.0f   // top right
-        };
-        //for (auto x : vertices)
-            //vertices_.emplace_back(x);
-
+        // Draw standard paddle geometry (centered at origin)
         glBindVertexArray(VAO_);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 

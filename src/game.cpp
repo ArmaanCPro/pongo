@@ -8,7 +8,7 @@ namespace pongo
         gfx(r),
         main_shader(s),
         win(w),
-        player_paddle(20.0f, 50.0f, 5.0f, 15.0f, 5.0f),
+        player_paddle(10.0f, 50.0f, 2.5f, 15.0f, 30.0f),
         last_frame_time((float)glfwGetTime())
     {
         gfx.add_paddle();
