@@ -14,9 +14,6 @@ namespace pongo
         game_ball(50.0f, 50.0f, 40.0f, 30.0f, 2.0f),
         last_frame_time((float)glfwGetTime())
     {
-        gfx.add_paddle();
-        gfx.add_ball();
-
         std::cout << "Play against ai? y/n" << std::endl;
         std::string input;
         std::cin >> input;
@@ -59,11 +56,36 @@ namespace pongo
 
     void game::draw_frame()
     {
-        gfx.begin_scene(main_shader);
+        // Clear screen
+        gfx.clear();
 
-        gfx.render_paddle(player_paddle, main_shader);
-        gfx.render_paddle(enemy_paddle, main_shader, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-        gfx.render_ball(game_ball, main_shader);
+        // Create orthographic projection with Y-axis flipped
+        // (0,0) is bottom-left, (WORLD_WIDTH, WORLD_HEIGHT) is top-right
+        glm::mat4 projection = glm::ortho(
+            0.0f, static_cast<float>(pongo::WORLD_WIDTH),
+            0.0f, static_cast<float>(pongo::WORLD_HEIGHT),
+            -1.0f, 1.0f
+        );
+
+        // Identity view matrix for 2D
+        glm::mat4 view = glm::mat4(1.0f);
+
+
+        // Begin scene
+        gfx.begin_scene();
+
+        // Submit all renderables
+        gfx.submit(player_paddle);
+        gfx.submit(enemy_paddle);
+        gfx.submit(game_ball);
+
+        // Set uniforms before end_scene
+        main_shader.use();
+        main_shader.SetMat4("u_Projection", projection);
+        main_shader.SetMat4("u_View", view);
+
+        // End scene and render everything
+        gfx.end_scene(main_shader);
     }
 
     void game::handle_collisions()

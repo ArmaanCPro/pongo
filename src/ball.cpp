@@ -43,6 +43,12 @@ namespace pongo
         mesh_ = new mesh(vertices);
         material_ = new material(color);
     }
+
+    ball::~ball()
+    {
+        delete mesh_;
+        delete material_;
+    }
     
     void ball::move(float delta_time)
     {

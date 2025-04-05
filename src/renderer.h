@@ -1,7 +1,4 @@
 #pragma once
-
-#include "ball.h"
-
 #include <vector>
 
 #include <glad/glad.h>
@@ -9,8 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "renderable.h"
 #include "shader.h"
-#include "paddle.h"
 
 namespace pongo
 {
@@ -18,19 +15,27 @@ namespace pongo
     {
     public:
         renderer();
+        ~renderer();
 
-        void add_paddle();
-        void add_ball();
+        void begin_scene();
+        void submit(const renderable& r);
+        void end_scene(shader& s);
+        void clear();
 
-        void begin_scene(shader& s);
-        void render_paddle(const paddle& p, shader& s, const glm::vec4& color = glm::vec4(1.0f));
-        void render_ball(const ball& b, shader& s, const glm::vec4& color = glm::vec4(1.0f));
     private:
-        GLuint paddle_VAO_ = 0, paddle_VBO_ = 0;
-        std::vector<float> paddle_vertices_ = { 0.0f };
-        GLuint ball_VAO_ = 0, ball_VBO_ = 0;
-        std::vector<float> ball_vertices_ = { 0.0f };
-        int ball_segments_ = 32;
-        glm::mat4 projection_matrix_;
+        struct render_command
+        {
+            mesh* mesh;
+            material* material;
+            glm::mat4 transform;
+
+            bool operator<(const render_command& other) const
+            {
+                // sort by material pointer for batching
+                return material < other.material;
+            }
+        };
+
+        std::vector<render_command> render_queue_;
     };
 }
