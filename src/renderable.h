@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-class mesh;
-class material;
+#include "mesh.h"
+#include "material.h"
 
 namespace pongo
 {
