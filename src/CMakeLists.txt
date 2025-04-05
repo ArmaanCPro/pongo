@@ -24,6 +24,9 @@ add_executable(main
         settings.h
         ball.cpp
         ball.h
+        renderable.h
+        mesh.cpp
+        mesh.h
 )
 
 find_package(glfw3 CONFIG REQUIRED)

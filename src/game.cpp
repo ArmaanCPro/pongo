@@ -4,7 +4,6 @@
 
 namespace pongo
 {
-
     game::game(renderer& r, shader& s, window& w)
         :
         gfx(r),
