@@ -7,7 +7,7 @@ namespace pongo
     class mesh
     {
     public:
-        explicit mesh(const std::vector<float>& vertices);
+        explicit mesh(const std::vector<float>& vertices, GLenum primitive_type = GL_TRIANGLES);
         ~mesh();
 
         void bind() const;
@@ -17,5 +17,6 @@ namespace pongo
     private:
         GLuint VAO_ = 0, VBO_ = 0;
         uint64_t vertex_count_ = 0;
+        GLenum primitive_type_ = GL_TRIANGLES;
     };
 }

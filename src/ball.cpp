@@ -7,18 +7,18 @@ namespace pongo
     ball::ball(float x, float y, float vx, float vy, float radius, const glm::vec4& color)
         : x_(x), y_(y), vx_(vx), vy_(vy), radius_(radius)
     {
-        // Create a simple circle mesh for the ball (actually a hexagon)
+        // circle mesh for a ball
         std::vector<float> vertices;
         const int segments = 12;
 
-        // Center vertex
+        // Center vertex (first vertex in a triangle fan)
         vertices.push_back(0.0f);  // x
         vertices.push_back(0.0f);  // y
         vertices.push_back(0.0f);  // z
         vertices.push_back(0.5f);  // tex u
         vertices.push_back(0.5f);  // tex v
 
-        // Create triangles
+        // Add vertices around the perimeter
         for (int i = 0; i <= segments; i++) {
             const float angle = 2.0f * M_PI * float(i) / float(segments);
             const float angle_x = std::cos(angle);
@@ -26,21 +26,12 @@ namespace pongo
 
             vertices.push_back(angle_x);       // x
             vertices.push_back(angle_y);       // y
-            vertices.push_back(0.0f);        // z
+            vertices.push_back(0.0f);          // z
             vertices.push_back(angle_x * 0.5f + 0.5f);  // tex u
             vertices.push_back(angle_y * 0.5f + 0.5f);  // tex v
-
-            // We create a triangle fan, so we need to repeat the center and the first vertex
-            if (i < segments) {
-                vertices.push_back(0.0f);  // center x
-                vertices.push_back(0.0f);  // center y
-                vertices.push_back(0.0f);  // center z
-                vertices.push_back(0.5f);  // center tex u
-                vertices.push_back(0.5f);  // center tex v
-            }
         }
 
-        mesh_ = new mesh(vertices);
+        mesh_ = new mesh(vertices, GL_TRIANGLE_FAN);
         material_ = new material(color);
     }
 

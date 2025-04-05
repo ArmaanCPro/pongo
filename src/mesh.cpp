@@ -2,9 +2,10 @@
 
 namespace pongo
 {
-    mesh::mesh(const std::vector<float>& vertices)
+    mesh::mesh(const std::vector<float>& vertices, GLenum primitive_type)
         :
-        vertex_count_(vertices.size() / 5)
+        vertex_count_(vertices.size() / 5),
+        primitive_type_(primitive_type)
     {
         glGenVertexArrays(1, &VAO_);
         glGenBuffers(1, &VBO_);
@@ -44,6 +45,6 @@ namespace pongo
 
     void mesh::draw() const
     {
-        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(vertex_count_));
+        glDrawArrays(primitive_type_, 0, (GLsizei)(vertex_count_));
     }
 }
