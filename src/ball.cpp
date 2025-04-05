@@ -4,8 +4,45 @@
 
 namespace pongo
 {
-    ball::ball(float x, float y, float vx, float vy, float radius)
-        : x_(x), y_(y), vx_(vx), vy_(vy), radius_(radius) {}
+    ball::ball(float x, float y, float vx, float vy, float radius, const glm::vec4& color)
+        : x_(x), y_(y), vx_(vx), vy_(vy), radius_(radius)
+    {
+        // Create a simple circle mesh for the ball (actually a hexagon)
+        std::vector<float> vertices;
+        const int segments = 12;
+
+        // Center vertex
+        vertices.push_back(0.0f);  // x
+        vertices.push_back(0.0f);  // y
+        vertices.push_back(0.0f);  // z
+        vertices.push_back(0.5f);  // tex u
+        vertices.push_back(0.5f);  // tex v
+
+        // Create triangles
+        for (int i = 0; i <= segments; i++) {
+            const float angle = 2.0f * M_PI * float(i) / float(segments);
+            const float angle_x = std::cos(angle);
+            const float angle_y = std::sin(angle);
+
+            vertices.push_back(angle_x);       // x
+            vertices.push_back(angle_y);       // y
+            vertices.push_back(0.0f);        // z
+            vertices.push_back(angle_x * 0.5f + 0.5f);  // tex u
+            vertices.push_back(angle_y * 0.5f + 0.5f);  // tex v
+
+            // We create a triangle fan, so we need to repeat the center and the first vertex
+            if (i < segments) {
+                vertices.push_back(0.0f);  // center x
+                vertices.push_back(0.0f);  // center y
+                vertices.push_back(0.0f);  // center z
+                vertices.push_back(0.5f);  // center tex u
+                vertices.push_back(0.5f);  // center tex v
+            }
+        }
+
+        mesh_ = new mesh(vertices);
+        material_ = new material(color);
+    }
     
     void ball::move(float delta_time)
     {
@@ -61,5 +98,23 @@ namespace pongo
     bool ball::is_out_of_bounds_y(float min_y, float max_y) const
     {
         return (y_ - radius_ < min_y) || (y_ + radius_ > max_y);
+    }
+
+    mesh* ball::get_mesh() const
+    {
+        return mesh_;
+    }
+
+    material* ball::get_material() const
+    {
+        return material_;
+    }
+
+    glm::mat4 ball::get_transform() const
+    {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(x_, y_, 0.0f));
+        model = glm::scale(model, glm::vec3(radius_, radius_, 1.0f));
+        return model;
     }
 }
