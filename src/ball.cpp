@@ -36,20 +36,23 @@ namespace pongo
             vertices.push_back(angle_y * 0.5f + 0.5f);  // tex v
         }
 
-        mesh_ = new mesh(vertices, GL_TRIANGLE_FAN);
-        material_ = new material(color);
+        mesh* mesh_obj = new mesh(vertices, GL_TRIANGLE_FAN);
+        material* material_obj = new material(color);
+        renderable_ = new renderable_component(mesh_obj, material_obj, glm::mat4(1.0f));
+
+        update_transform();
     }
 
     ball::~ball()
     {
-        delete mesh_;
-        delete material_;
+        delete renderable_;
     }
     
     void ball::move(float delta_time)
     {
         x_ += vx_ * delta_time;
         y_ += vy_ * delta_time;
+        update_transform();
     }
     
     void ball::bounce_x()
@@ -68,6 +71,7 @@ namespace pongo
         y_ = y;
         vx_ = vx;
         vy_ = vy;
+        update_transform();
     }
     
     void ball::accelerate(float factor)
@@ -214,21 +218,16 @@ namespace pongo
         return (y_ - radius_ < min_y) || (y_ + radius_ > max_y);
     }
 
-    mesh* ball::get_mesh() const
+    const renderable_component& ball::get_renderable() const
     {
-        return mesh_;
+        return *renderable_;
     }
 
-    material* ball::get_material() const
+    void ball::update_transform()
     {
-        return material_;
-    }
-
-    glm::mat4 ball::get_transform() const
-    {
-        glm::mat4 model = glm::mat4(1.0f);
+        auto model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(x_, y_, 0.0f));
         model = glm::scale(model, glm::vec3(radius_, radius_, 1.0f));
-        return model;
+        renderable_->set_transform(model);
     }
 }

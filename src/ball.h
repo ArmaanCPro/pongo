@@ -1,17 +1,17 @@
 #pragma once
 
 #include "paddle.h"
-#include "renderable.h"
+#include "renderable_component.h"
 #include "mesh.h"
 #include "material.h"
 
 namespace pongo
 {
-    class ball : public renderable
+    class ball
     {
     public:
         ball(float x, float y, float vx, float vy, float radius, const glm::vec4& color = glm::vec4(1.0f));
-        ~ball() override;
+        ~ball();
 
         void move(float delta_time);
         void bounce_x();
@@ -35,17 +35,16 @@ namespace pongo
         void setVX(float vx) { vx_ = vx; }
         void setVY(float vy) { vy_ = vy; }
 
-        // renderable interface impl
-        [[nodiscard]] mesh* get_mesh() const override;
-        [[nodiscard]] material* get_material() const override;
-        [[nodiscard]] glm::mat4 get_transform() const override;
+        // needed for rendering
+        [[nodiscard]] const renderable_component& get_renderable() const;
 
     private:
         float x_, y_;
         float vx_, vy_;
         float radius_;
 
-        mesh* mesh_ = nullptr;
-        material* material_ = nullptr;
+        renderable_component* renderable_ = nullptr;
+
+        void update_transform();
     };
 }

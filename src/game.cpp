@@ -70,14 +70,13 @@ namespace pongo
         // Identity view matrix for 2D
         glm::mat4 view = glm::mat4(1.0f);
 
-
         // Begin scene
         gfx.begin_scene();
 
         // Submit all renderables
         gfx.submit(player_paddle);
         gfx.submit(enemy_paddle);
-        gfx.submit(game_ball);
+        gfx.submit(game_ball.get_renderable());
 
         // Set uniforms before end_scene
         main_shader.use();
