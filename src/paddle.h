@@ -1,16 +1,16 @@
 #pragma once
 
-#include "renderable.h"
+#include "renderable_component.h"
 #include "material.h"
 #include "mesh.h"
 
 namespace pongo
 {
-    class paddle : public renderable
+    class paddle
     {
     public:
         paddle(float x, float y, float width, float height, float speed, const glm::vec4& color = glm::vec4(1.0f));
-        ~paddle() override;
+        ~paddle();
 
         void move_up(float delta_time);
         void move_down(float delta_time);
@@ -21,10 +21,9 @@ namespace pongo
         [[nodiscard]] float getWidth() const { return width_; }
         [[nodiscard]] float getHeight() const { return height_; }
 
-        // renderable interface implementation
-        [[nodiscard]] mesh* get_mesh() const override;
-        [[nodiscard]] material* get_material() const override;
-        [[nodiscard]] glm::mat4 get_transform() const override;
+        [[nodiscard]] const renderable_component& get_renderable() const;
+
+        void update_transform() const;
 
     private:
         // pos in world coords
@@ -34,7 +33,6 @@ namespace pongo
         // movement speed in world units per second
         float speed_;
 
-        mesh* mesh_ = nullptr;
-        material* material_ = nullptr;
+        renderable_component* renderable_ = nullptr;
     };
 }

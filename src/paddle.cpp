@@ -25,14 +25,16 @@ namespace pongo
             -0.5f,  0.5f, 0.0f,  0.0f, 1.0f
         };
 
-        mesh_ = new mesh(vertices);
-        material_ = new material(color);
+        mesh* mesh_obj = new mesh(vertices);
+        material* mat_obj = new material(color);
+        renderable_ = new renderable_component(mesh_obj, mat_obj, glm::mat4(1.0f));
+
+        update_transform();
     }
 
     paddle::~paddle()
     {
-        delete mesh_;
-        delete material_;
+        delete renderable_;
     }
 
     void paddle::move_up(float delta_time)
@@ -40,6 +42,8 @@ namespace pongo
         y_ += speed_ * delta_time;
         if (y_ + height_ / 2 > WORLD_HEIGHT)
             y_ = WORLD_HEIGHT - height_ / 2;
+
+        update_transform();
     }
 
     void paddle::move_down(float delta_time)
@@ -47,23 +51,20 @@ namespace pongo
         y_ -= speed_ * delta_time;
         if (y_ - height_ / 2 < 0)
             y_ = height_ / 2;
+
+        update_transform();
     }
 
-    mesh* paddle::get_mesh() const
+    const renderable_component& paddle::get_renderable() const
     {
-        return mesh_;
+        return *renderable_;
     }
 
-    material* paddle::get_material() const
-    {
-        return material_;
-    }
-
-    glm::mat4 paddle::get_transform() const
+    void paddle::update_transform() const
     {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(x_, y_, 0.0f));
         model = glm::scale(model, glm::vec3(width_, height_, 1.0f));
-        return model;
+        renderable_->set_transform(model);
     }
 }

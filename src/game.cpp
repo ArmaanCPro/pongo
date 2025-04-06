@@ -74,8 +74,8 @@ namespace pongo
         gfx.begin_scene();
 
         // Submit all renderables
-        gfx.submit(player_paddle);
-        gfx.submit(enemy_paddle);
+        gfx.submit(player_paddle.get_renderable());
+        gfx.submit(enemy_paddle.get_renderable());
         gfx.submit(game_ball.get_renderable());
 
         // Set uniforms before end_scene
