@@ -61,11 +61,8 @@ namespace pongo
 
         // Create orthographic projection with Y-axis flipped
         // (0,0) is bottom-left, (WORLD_WIDTH, WORLD_HEIGHT) is top-right
-        glm::mat4 projection = glm::ortho(
-            0.0f, static_cast<float>(pongo::WORLD_WIDTH),
-            0.0f, static_cast<float>(pongo::WORLD_HEIGHT),
-            -1.0f, 1.0f
-        );
+        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(pongo::WORLD_WIDTH), 0.0f,
+                                          static_cast<float>(pongo::WORLD_HEIGHT), -1.0f, 1.0f);
 
         // Identity view matrix for 2D
         glm::mat4 view = glm::mat4(1.0f);
@@ -126,7 +123,7 @@ namespace pongo
 
 #ifdef PL_WINDOWS
         system("cls");
-#elif
+#else
         system("clear");
 #endif
         std::cout << "P1 Score: " << player_score << std::endl;
@@ -163,4 +160,4 @@ namespace pongo
         // Add randomness to make it beatable
         // Adjust speed based on score difference
     }
-}
+} // namespace pongo
