@@ -25,16 +25,11 @@ namespace pongo
             -0.5f,  0.5f, 0.0f,  0.0f, 1.0f
         };
 
-        mesh* mesh_obj = new mesh(vertices);
-        material* mat_obj = new material(color);
-        renderable_ = new renderable_component(mesh_obj, mat_obj, glm::mat4(1.0f));
+        std::unique_ptr<mesh> mesh_obj = std::make_unique<mesh>(vertices);
+        std::unique_ptr<material> mat_obj = std::make_unique<material>(color);
+        renderable_ = std::make_unique<renderable_component>(std::move(mesh_obj), std::move(mat_obj), glm::mat4(1.0f));
 
         update_transform();
-    }
-
-    paddle::~paddle()
-    {
-        delete renderable_;
     }
 
     void paddle::move_up(float delta_time)

@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>  // For additional vector operations
+#include <memory>
 
 namespace pongo
 {
@@ -36,16 +37,11 @@ namespace pongo
             vertices.push_back(angle_y * 0.5f + 0.5f);  // tex v
         }
 
-        mesh* mesh_obj = new mesh(vertices, GL_TRIANGLE_FAN);
-        material* material_obj = new material(color);
-        renderable_ = new renderable_component(mesh_obj, material_obj, glm::mat4(1.0f));
+        std::unique_ptr<mesh> mesh_obj = std::make_unique<mesh>(vertices, GL_TRIANGLE_FAN);
+        std::unique_ptr<material> material_obj = std::make_unique<material>(color);
+        renderable_ = std::make_unique<renderable_component>(std::move(mesh_obj), std::move(material_obj), glm::mat4(1.0f));
 
         update_transform();
-    }
-
-    ball::~ball()
-    {
-        delete renderable_;
     }
     
     void ball::move(float delta_time)
@@ -223,7 +219,7 @@ namespace pongo
         return *renderable_;
     }
 
-    void ball::update_transform()
+    void ball::update_transform() const
     {
         auto model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(x_, y_, 0.0f));

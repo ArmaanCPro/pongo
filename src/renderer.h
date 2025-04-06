@@ -25,8 +25,8 @@ namespace pongo
     private:
         struct render_command
         {
-            mesh* mesh;
-            material* material;
+            std::shared_ptr<mesh> mesh;
+            std::shared_ptr<material> material;
             glm::mat4 transform;
 
             bool operator<(const render_command& other) const

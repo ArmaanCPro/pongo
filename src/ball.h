@@ -4,6 +4,7 @@
 #include "renderable_component.h"
 #include "mesh.h"
 #include "material.h"
+#include <memory>
 
 namespace pongo
 {
@@ -11,7 +12,6 @@ namespace pongo
     {
     public:
         ball(float x, float y, float vx, float vy, float radius, const glm::vec4& color = glm::vec4(1.0f));
-        ~ball();
 
         void move(float delta_time);
         void bounce_x();
@@ -43,8 +43,8 @@ namespace pongo
         float vx_, vy_;
         float radius_;
 
-        renderable_component* renderable_ = nullptr;
+        std::unique_ptr<renderable_component> renderable_ = nullptr;
 
-        void update_transform();
+        void update_transform() const;
     };
 }

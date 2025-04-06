@@ -51,10 +51,10 @@ namespace pongo
         for (const auto& cmd : render_queue_)
         {
             // only bind material if it changed from previous
-            if (current_material != cmd.material)
+            if (current_material != cmd.material.get())
             {
                 cmd.material->bind(s);
-                current_material = cmd.material;
+                current_material = cmd.material.get();
             }
 
             // set model transform

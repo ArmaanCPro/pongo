@@ -3,6 +3,7 @@
 #include "renderable_component.h"
 #include "material.h"
 #include "mesh.h"
+#include <memory>
 
 namespace pongo
 {
@@ -10,7 +11,6 @@ namespace pongo
     {
     public:
         paddle(float x, float y, float width, float height, float speed, const glm::vec4& color = glm::vec4(1.0f));
-        ~paddle();
 
         void move_up(float delta_time);
         void move_down(float delta_time);
@@ -33,6 +33,6 @@ namespace pongo
         // movement speed in world units per second
         float speed_;
 
-        renderable_component* renderable_ = nullptr;
+        std::unique_ptr<renderable_component> renderable_ = nullptr;
     };
 }
