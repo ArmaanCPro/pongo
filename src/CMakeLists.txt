@@ -29,6 +29,7 @@ add_executable(main
         mesh.h
         material.cpp
         material.h
+        renderable_component.h
 )
 
 find_package(glfw3 CONFIG REQUIRED)
