@@ -91,10 +91,13 @@ namespace pongo
     void game::handle_collisions()
     {
         // ball-paddle collisions
-        if (game_ball.collides_with_paddle(player_paddle) || game_ball.collides_with_paddle(enemy_paddle))
+        if (game_ball.collides_with_paddle(player_paddle))
         {
-            game_ball.bounce_x();
-            game_ball.accelerate(1.05f);
+            game_ball.handle_paddle_collision(player_paddle);
+        }
+        else if (game_ball.collides_with_paddle(enemy_paddle))
+        {
+            game_ball.handle_paddle_collision(enemy_paddle);
         }
 
         // ball-wall (top/bottom)

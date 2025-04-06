@@ -21,6 +21,7 @@ namespace pongo
 
         // Add collision detection for paddles and screen bounds
         [[nodiscard]] bool collides_with_paddle(const paddle& p) const;
+        void handle_paddle_collision(const paddle& p);
         [[nodiscard]] bool is_out_of_bounds_x(float min_x, float max_x) const;
         [[nodiscard]] bool is_out_of_bounds_y(float min_y, float max_y) const;
 
