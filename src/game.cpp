@@ -5,14 +5,10 @@
 namespace pongo
 {
     game::game(renderer& r, shader& s, window& w)
-        :
-        gfx(r),
-        main_shader(s),
-        win(w),
-        player_paddle(10.0f, 50.0f, 1.5f, 15.0f, 40.0f),
-        enemy_paddle(90.0f, 50.0f, 1.5f, 15.0f, 35.0f, glm::vec4(1.0f, 0.1f, 1.0f, 1.0f)),
-        game_ball(50.0f, 50.0f, 40.0f, 30.0f, 2.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f)),
-        last_frame_time((float)glfwGetTime())
+        : gfx(r), main_shader(s), win(w), player_paddle(10.0f, 50.0f, 1.5f, 15.0f, 40.0f),
+          enemy_paddle(90.0f, 50.0f, 1.5f, 15.0f, 35.0f, glm::vec4(1.0f, 0.1f, 1.0f, 1.0f)),
+          game_ball(50.0f, 50.0f, 40.0f, 30.0f, 2.0f, glm::vec4(0.1f, 1.0f, 0.1f, 1.0f)),
+          last_frame_time((float)glfwGetTime())
     {
         std::cout << "Play against ai? y/n" << std::endl;
         std::string input;
@@ -61,15 +57,11 @@ namespace pongo
 
         // Create orthographic projection with Y-axis flipped
         // (0,0) is bottom-left, (WORLD_WIDTH, WORLD_HEIGHT) is top-right
-        glm::mat4 projection = glm::ortho(
-            0.0f, static_cast<float>(pongo::WORLD_WIDTH),
-            0.0f, static_cast<float>(pongo::WORLD_HEIGHT),
-            -1.0f, 1.0f
-        );
+        glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(pongo::WORLD_WIDTH), 0.0f,
+                                          static_cast<float>(pongo::WORLD_HEIGHT), -1.0f, 1.0f);
 
         // Identity view matrix for 2D
         glm::mat4 view = glm::mat4(1.0f);
-
 
         // Begin scene
         gfx.begin_scene();
@@ -127,7 +119,7 @@ namespace pongo
 
 #ifdef PL_WINDOWS
         system("cls");
-#elif
+#else
         system("clear");
 #endif
         std::cout << "P1 Score: " << player_score << std::endl;
@@ -164,4 +156,4 @@ namespace pongo
         // Add randomness to make it beatable
         // Adjust speed based on score difference
     }
-}
+} // namespace pongo

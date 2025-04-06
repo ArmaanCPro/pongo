@@ -13,7 +13,7 @@ namespace pongo
 {
     class renderer
     {
-    public:
+      public:
         renderer();
         ~renderer();
 
@@ -22,20 +22,20 @@ namespace pongo
         void end_scene(shader& s);
         void clear();
 
-    private:
+      private:
         struct render_command
         {
-            mesh* mesh;
-            material* material;
+            mesh* mesh_ptr;
+            material* material_ptr;
             glm::mat4 transform;
 
             bool operator<(const render_command& other) const
             {
                 // sort by material pointer for batching
-                return material < other.material;
+                return material_ptr < other.material_ptr;
             }
         };
 
         std::vector<render_command> render_queue_;
     };
-}
+} // namespace pongo

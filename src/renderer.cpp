@@ -2,7 +2,7 @@
 
 #include "settings.h"
 
-#include <glm/common.hpp>
+#include <algorithm>
 #include <glm/common.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,29 +13,19 @@ namespace utility
     {
         return glm::vec2(2.0f * wx / pongo::WORLD_WIDTH - 1.0f, 1.0f - 2.0f * wy / pongo::WORLD_HEIGHT);
     }
-}
+} // namespace utility
 
 namespace pongo
 {
-    renderer::renderer()
-    {
-    }
+    renderer::renderer() {}
 
-    renderer::~renderer()
-    {}
+    renderer::~renderer() {}
 
-    void renderer::begin_scene()
-    {
-        render_queue_.clear();
-    }
+    void renderer::begin_scene() { render_queue_.clear(); }
 
     void renderer::submit(const renderable& r)
     {
-        render_queue_.push_back({
-            r.get_mesh(),
-            r.get_material(),
-            r.get_transform()
-        });
+        render_queue_.push_back({r.get_mesh(), r.get_material(), r.get_transform()});
     }
 
     void renderer::end_scene(shader& s)
@@ -51,18 +41,18 @@ namespace pongo
         for (const auto& cmd : render_queue_)
         {
             // only bind material if it changed from previous
-            if (current_material != cmd.material)
+            if (current_material != cmd.material_ptr)
             {
-                cmd.material->bind(s);
-                current_material = cmd.material;
+                cmd.material_ptr->bind(s);
+                current_material = cmd.material_ptr;
             }
 
             // set model transform
             s.SetMat4("u_Model", cmd.transform);
 
             // bind and draw mesh
-            cmd.mesh->bind();
-            cmd.mesh->draw();
+            cmd.mesh_ptr->bind();
+            cmd.mesh_ptr->draw();
         }
     }
 
